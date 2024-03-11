@@ -1,0 +1,130 @@
+<script src="https://kit.fontawesome.com/357c4141d9.js" crossorigin="anonymous"></script>
+<?php
+use MF\Controller\Action;
+use MF\Model\Container;
+
+	$usuario = Container::getModel('Usuario');
+	$usuario->__set('id', $_SESSION['id']);
+
+	$this->view->infoUsuario = $usuario->getInfoUsuario();
+	print_r($this->view->infoUsuario);
+
+	$this->view->totalTweets = $usuario->getTotalTweets();
+	print_r($this->view->totalTweets);
+
+	$this->view->totalSeguindo = $usuario->getTotalSeguindo();
+	$this->view->totalSeguidores = $usuario->getTotalSeguidores();
+?>
+<nav class="navbar navbar-expand-lg navbar-ligth menu">
+      <div class="container">
+	  <a class="navbar-brand" href="#">
+           <img src="/img/twitter_logo.png" >
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span ><i class="fa-solid fa-bars"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/timeline">HOME</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/sair">SAIR</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/quem_seguir"><i class="fa-solid fa-magnifying-glass"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+<div class="container mt-5">
+	<div class="row pt-2">
+		
+		<div class="col-md-3">
+
+			<div class="perfil">
+				<div class="perfilTopo">
+
+				</div>
+
+				<div class="perfilPainel">
+					
+					<div class="row mt-2 mb-2">
+						<div class="col mb-2">
+							<span class="perfilPainelNome">
+							<?php echo($this->view->infoUsuario['nome']); ?>
+							</span>
+						</div>
+					</div>
+
+					<div class="row mb-2">
+
+						<div class="col">
+							<span class="perfilPainelItem">Tweets</span><br />
+							<span class="perfilPainelItemValor"><?php echo($this->view->totalTweets['totalTweets']); ?></span>
+						</div>
+
+						<div class="col">
+							<span class="perfilPainelItem">Seguindo</span><br />
+							<span class="perfilPainelItemValor"><?php echo($this->view->totalSeguindo['totalSeguindo']); ?></span>
+						</div>
+
+						<div class="col">
+							<span class="perfilPainelItem">Seguidores</span><br />
+							<span class="perfilPainelItemValor"><?php echo($this->view->totalSeguidores['totalSeguidores']); ?></span>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<div class="col-md-6">
+			<div class="row mb-2">
+				<div class="col tweetBox">
+					<form method="post" action="/tweet">
+						<textarea class="form-control" name="tweet" id="exampleFormControlTextarea1" rows="3"></textarea>
+						
+						<div class="col mt-2 d-flex justify-content-end">
+							<button type="submit" class="btn btn-primary">Tweet</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+
+			<?php foreach($this->view->tweets as $id_tweet => $tweet){ ?>
+				<div class="row tweet">
+					<div class="col">
+						<p><strong><?=$tweet['nome']?></strong> <span class="text text-muted">- <?=$tweet['data']?></span></p>
+						<p><?=$tweet['tweet']?></p>
+
+						<br />
+						<?php if($tweet['id_usuario'] == $_SESSION['id']) { ?>
+						<form method="post" action="/remover?remover=<?=$tweet['id']?>">
+							<div class="col d-flex justify-content-end">
+								<button type="submit" class="btn btn-danger" name="remover"><small>Remover</small></button>
+							</div>
+						</form>
+						<?php } ?>
+					</div>
+				</div> 
+			<?php } ?>
+
+		</div>
+
+		<div class="col-md-3">
+			<div class="quemSeguir">
+				<span class="quemSeguirTitulo">Quem seguir</span><br />
+				<hr />
+				<a href="/quem_seguir" class="quemSeguirTxt">Procurar por pessoas conhecidas</a>
+			</div>
+		</div>
+
+	</div>
+</div>

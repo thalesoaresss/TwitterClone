@@ -1,0 +1,133 @@
+<script src="https://kit.fontawesome.com/357c4141d9.js" crossorigin="anonymous"></script>
+<?php
+use MF\Controller\Action;
+use MF\Model\Container;
+
+	$usuario = Container::getModel('Usuario');
+	$usuario->__set('id', $_SESSION['id']);
+
+	$this->view->infoUsuario = $usuario->getInfoUsuario();
+	print_r($this->view->infoUsuario);
+
+	$this->view->totalTweets = $usuario->getTotalTweets();
+	print_r($this->view->totalTweets);
+
+	$this->view->totalSeguindo = $usuario->getTotalSeguindo();
+	$this->view->totalSeguidores = $usuario->getTotalSeguidores();
+?>
+<nav class="navbar navbar-expand-lg navbar-ligth menu">
+      <div class="container">
+	  <a class="navbar-brand" href="#">
+           <img src="/img/twitter_logo.png" >
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span ><i class="fa-solid fa-bars"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/timeline">HOME</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/sair">SAIR</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/quem_seguir"><i class="fa-solid fa-magnifying-glass"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+<div class="container mt-5">
+	<div class="row pt-2">
+		
+		<div class="col-md-3">
+
+			<div class="perfil">
+				<div class="perfilTopo">
+
+				</div>
+
+				<div class="perfilPainel">
+					
+				<div class="row mt-2 mb-2">
+						<div class="col mb-2">
+							<span class="perfilPainelNome">
+							<?php echo($this->view->infoUsuario['nome']); ?>
+							</span>
+						</div>
+					</div>
+
+					<div class="row mb-2">
+
+						<div class="col">
+							<span class="perfilPainelItem">Tweets</span><br />
+							<span class="perfilPainelItemValor"><?php echo($this->view->totalTweets['totalTweets']); ?></span>
+						</div>
+
+						<div class="col">
+							<span class="perfilPainelItem">Seguindo</span><br />
+							<span class="perfilPainelItemValor"><?php echo($this->view->totalSeguindo['totalSeguindo']); ?></span>
+						</div>
+
+						<div class="col">
+							<span class="perfilPainelItem">Seguidores</span><br />
+							<span class="perfilPainelItemValor"><?php echo($this->view->totalSeguidores['totalSeguidores']); ?></span>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<div class="col-md-6">
+			
+			<div class="row mb-2">
+				<div class="col">
+					<div class="card">
+						<div class="card-body">
+							<form method="get" action="/quem_seguir">
+								<div class="input-group mb-3">
+									<input type="text" class="form-control" name="pesquisarPor" placeholder="Quem você está procurando?">
+									<div class="input-group-append">
+										<button class="btn btn-primary" type="submit">Procurar</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<?php foreach($this->view->usuarios as $id_usuario => $usuarios) { ?>
+			<div class="row mb-2">
+				<div class="col">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-6">
+									<?=$usuarios['nome']?>
+								</div>
+							
+								<div class="col-md-6 d-flex justify-content-end">
+									<div>
+										<?php if($usuarios['seguindo_sn'] == 0){ ?>
+											<a href="/acao?acao=seguir&id_usuario=<?=$usuarios['id']?>" class="btn btn-success">Seguir</a>
+										<?php }?>
+										<?php if($usuarios['seguindo_sn'] == 1){ ?>
+											<a href="/acao?acao=deixar_de_seguir&id_usuario=<?=$usuarios['id']?>" class="btn btn-danger">Deixar de seguir</a>
+										<?php }?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+</div>
